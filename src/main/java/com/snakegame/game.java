@@ -61,6 +61,9 @@ public class game extends JPanel implements KeyListener {
             if (snakeBody.get(i).x == head.x && snakeBody.get(i).y == head.y) {
                 resp = gameOver();
                 switch (resp) {
+                    case JOptionPane.CancelButton:
+                        System.exit(0);
+                        break;
                     case JOptionPane.CLOSED_OPTION:
                         System.exit(0);
                         break;
