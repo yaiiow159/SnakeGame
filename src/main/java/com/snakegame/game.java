@@ -99,9 +99,6 @@ public class game extends JPanel implements KeyListener {
         g.fillRect(0, 0, WIDTH, HEIGHT);
         fruit.drawFruit(g);
         snake.drawSnake(g);
-        if(bombList.size() == 0){
-            bombList.add(0,new Bomb());
-        }
         for (Bomb bomb : bombList) {
             bomb.drawBomb(g);
         }
