@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.security.SecureRandom;
 import java.util.*;
 import java.util.Timer;
 
@@ -18,13 +17,14 @@ public class game extends JPanel implements KeyListener {
     public static final int col = WIDTH / CELL_SIZE;
     private Snake snake;
     private Fruit fruit;
-    private Bomb bomb;
+    private static ArrayList<Bomb> bombList;
     private int speed = 100;
     private static String direction;
     private boolean allowKeyPress = true;
     private Timer timer;
     private int score;
     private static int highestScore;
+    private static int check;
 
     public game() {
         reset();
@@ -61,6 +61,9 @@ public class game extends JPanel implements KeyListener {
             if (snakeBody.get(i).x == head.x && snakeBody.get(i).y == head.y) {
                 resp = gameOver();
                 switch (resp) {
+                    case JOptionPane.CANCEL_OPTION:
+                        System.exit(0);
+                        break;
                     case JOptionPane.CLOSED_OPTION:
                         System.exit(0);
                         break;
@@ -72,18 +75,23 @@ public class game extends JPanel implements KeyListener {
                         return;
                 }
             }
-            if(snakeBody.get(i).x == bomb.getX() && snakeBody.get(i).y == bomb.getY()){
-                resp = gameOver();
-                switch (resp) {
-                    case JOptionPane.CLOSED_OPTION:
-                        System.exit(0);
-                        break;
-                    case JOptionPane.NO_OPTION:
-                        System.exit(0);
-                        break;
-                    case JOptionPane.YES_OPTION:
-                        reset();
-                        return;
+            for (int j = 0; j < bombList.size(); j++) {
+                if(snakeBody.get(i).x == bombList.get(j).getX() && snakeBody.get(i).y == bombList.get(j).getY()){
+                    resp = gameOver();
+                    switch (resp) {
+                        case JOptionPane.CANCEL_OPTION:
+                            System.exit(0);
+                            break;
+                        case JOptionPane.CLOSED_OPTION:
+                            System.exit(0);
+                            break;
+                        case JOptionPane.NO_OPTION:
+                            System.exit(0);
+                            break;
+                        case JOptionPane.YES_OPTION:
+                            reset();
+                            return;
+                    }
                 }
             }
         }
@@ -91,7 +99,12 @@ public class game extends JPanel implements KeyListener {
         g.fillRect(0, 0, WIDTH, HEIGHT);
         fruit.drawFruit(g);
         snake.drawSnake(g);
-        bomb.drawBomb(g);
+        if(bombList.size() == 0){
+            bombList.add(0,new Bomb());
+        }
+        for (Bomb bomb : bombList) {
+            bomb.drawBomb(g);
+        }
         int snakeX = snake.getSnakeBody().get(0).x;
         int snakeY = snake.getSnakeBody().get(0).y;
 
@@ -129,7 +142,16 @@ public class game extends JPanel implements KeyListener {
         // 重新定位貪吃蛇的位置
         allowKeyPress = true;
         requestFocusInWindow();
-
+    }
+    private void checkSnakeLength () {
+        // 判斷如果貪吃蛇長度已經增加了7的倍數，就多一個新的snake到地圖
+        if(snake.getSnakeBody().size() % 7 == 0){
+            ++check;
+            if(check % 7 == 0){
+                Bomb bomb = Bomb.generateBomb(fruit, snake, bombList);
+                bombList.add(bomb);
+            }
+        }
     }
     private void reset () {
         if(highestScore == 0){
@@ -143,7 +165,11 @@ public class game extends JPanel implements KeyListener {
         direction = "Right";
         snake = new Snake();
         fruit = new Fruit();
-        bomb = new Bomb();
+        if (bombList != null) {
+            bombList.clear();
+            bombList.add(0,new Bomb());
+        }
+        bombList = new ArrayList<>();
         setDefaultTimer();
     }
     private void setDefaultTimer () {
@@ -151,7 +177,14 @@ public class game extends JPanel implements KeyListener {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                repaint();
+                checkSnakeLength();
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } finally {
+                    repaint();
+                }
             }
         }, 0, speed);
     }
