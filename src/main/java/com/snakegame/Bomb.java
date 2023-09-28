@@ -28,7 +28,7 @@ public class Bomb {
         g.fillOval(this.x, this.y, game.CELL_SIZE, game.CELL_SIZE);
     }
 
-    public static Bomb generateBomb(Fruit fruit, Snake snake,ArrayList<Bomb> bombList){
+    public static Bomb generateBomb(Fruit fruit, Snake snake,ArrayList<Bomb> bombList, int number){
         // 要避開水果生成位置以及貪吃蛇位置以及本來炸彈位置
         Bomb newBomb = new Bomb();
         int newX;
@@ -38,6 +38,10 @@ public class Bomb {
             newX = (int)(Math.floor(Math.random() * game.col) * game.CELL_SIZE);
             newY = (int)(Math.floor(Math.random() * game.row) * game.CELL_SIZE);
             overlapping = validateCollision(snake.getSnakeBody(), fruit, bombList, newX, newY);
+            number--;
+            if(number == 0){
+                break;
+            }
         } while (overlapping);
         newBomb.setX(newX);
         newBomb.setY(newY);

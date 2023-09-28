@@ -26,6 +26,8 @@ public class game extends JPanel implements KeyListener {
     private static int highestScore;
     private static int check;
 
+    private static int times = 5;
+
     public game() {
         reset();
         addKeyListener(this);
@@ -145,8 +147,10 @@ public class game extends JPanel implements KeyListener {
         if(snake.getSnakeBody().size() % 7 == 0){
             ++check;
             if(check % 7 == 0){
-                Bomb bomb = Bomb.generateBomb(fruit, snake, bombList);
+                int number = (int)(Math.random() *  times)+ 1;
+                Bomb bomb = Bomb.generateBomb(fruit, snake, bombList, number);
                 bombList.add(bomb);
+                times++;
             }
         }
     }
@@ -164,9 +168,9 @@ public class game extends JPanel implements KeyListener {
         fruit = new Fruit();
         if (bombList != null) {
             bombList.clear();
-            bombList.add(0,new Bomb());
         }
         bombList = new ArrayList<>();
+        bombList.add(new Bomb());
         setDefaultTimer();
     }
     private void setDefaultTimer () {
