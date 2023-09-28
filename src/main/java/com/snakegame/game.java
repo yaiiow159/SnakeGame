@@ -11,20 +11,19 @@ public class game extends JPanel implements KeyListener {
     public static final int CELL_SIZE = 20;
     public static final int WIDTH = 600;
     public static final int HEIGHT = 600;
-
     public static final int row = HEIGHT / CELL_SIZE;
-
     public static final int col = WIDTH / CELL_SIZE;
+    private static ArrayList<Bomb> bombList;
+    private static String direction;
+    private static int highestScore;
+    private static int check;
+
     private Snake snake;
     private Fruit fruit;
-    private static ArrayList<Bomb> bombList;
     private int speed = 100;
-    private static String direction;
     private boolean allowKeyPress = true;
     private Timer timer;
     private int score;
-    private static int highestScore;
-    private static int check;
 
     public game() {
         reset();
@@ -164,9 +163,9 @@ public class game extends JPanel implements KeyListener {
         fruit = new Fruit();
         if (bombList != null) {
             bombList.clear();
-            bombList.add(0,new Bomb());
         }
-        bombList = new ArrayList<>();
+        bombList.add(new Bomb());
+
         setDefaultTimer();
     }
     private void setDefaultTimer () {
