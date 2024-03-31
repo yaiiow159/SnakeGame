@@ -1,4 +1,7 @@
-# snakegame
- The snakegame role is to eat the food and you can get one score
- and if you unfortunetely eating the bomb you will lose the game
- and finally will print your score and record your hightest score you played in the game.
+# 貪吃蛇遊戲
+在基礎的貪吃蛇遊戲中添加一些可玩性，如當蛇長度到達某一特定數值時，會增加炸彈(碰到擊遊戲結束)<br>
+並且會在遊戲結束時計算積分以及最高積分數<br>
+
+遊玩方式: 上下左右控制蛇移動方向
+
+
